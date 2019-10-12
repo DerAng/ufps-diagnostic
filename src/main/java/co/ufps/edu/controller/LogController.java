@@ -1,11 +1,7 @@
 package co.ufps.edu.controller;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -17,24 +13,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import co.ufps.edu.dao.LoginDao;
-import co.ufps.edu.model.Estudiante;
 import co.ufps.edu.model.Login;
 import co.ufps.edu.util.JwtUtil;
 
 @Controller
 public class LogController {
 
-	@Autowired
-	private RedisTemplate<String, String> template;
-
 	private JwtUtil jwtUtil = new JwtUtil();
 
 	private LoginDao loginDao = new LoginDao();
 
-	@ModelAttribute("estudiante")
-	public Estudiante getEstudiante() {
-		return new Estudiante();
-	}
+
 
 	@GetMapping("/logout") // Base
 	@ResponseBody
@@ -45,12 +34,12 @@ public class LogController {
 
 	@GetMapping("/login") // Base
 	public String index() {
-		return "Login"; // Nombre del archivo jsp
+		return "EXTERNO/Login"; // Nombre del archivo jsp
 	}
 
 	@GetMapping("/") // Base
 	public String main() {
-		return "index"; // Nombre del archivo jsp
+		return "EXTERNO/index"; // Nombre del archivo jsp
 	}
 
 	@ModelAttribute("login")
@@ -69,11 +58,11 @@ public class LogController {
 				request.setAttribute("token", jwt);
 				request.getSession().setAttribute("codigo", login.getCodigo());
 				HttpSession session = request.getSession();
-				template.opsForValue().set("SESSION:" + login.getCodigo(), jwt);
+				//template.opsForValue().set("SESSION:" + login.getCodigo(), jwt);
 				session.setAttribute("codigo", login.getCodigo());
-				if (resultado.equals("estudiante")) {
-					session.setAttribute("user", "Estudiante");
-					return "Estudiante/indexEstudiante";
+				if (resultado.equals("ROL1")) {
+					session.setAttribute("user", "ROL1");
+					return "INTERNO/ROL1/indexRol1";
 				} else if (resultado.equals("evaluador")) {
 					session.setAttribute("user", "Evaluador");
 					return "Evaluador/indexEvaluador";
@@ -93,10 +82,10 @@ public class LogController {
 
 	public void validarSesion(String token, HttpServletRequest request) {
 		int codigo = jwtUtil.parseToken(token);
-		if (token == null || token.isEmpty() || codigo == 0
+		/*if (token == null || token.isEmpty() || codigo == 0
 				|| template.opsForValue().get("SESSION:" + codigo) == null) {
 			throw new RuntimeException("FALTA TOKEN");
-		}
+		}*/
 		request.setAttribute("token", token);
 		request.getSession().setAttribute("codigo", codigo);
 
@@ -105,7 +94,7 @@ public class LogController {
 	private void getLogOut(String token, HttpServletRequest request) {
 		request.getSession().invalidate();
 		int codigo = jwtUtil.parseToken(token);
-		template.delete("SESSION:" + codigo);
+		//template.delete("SESSION:" + codigo);
 	}
 
 }

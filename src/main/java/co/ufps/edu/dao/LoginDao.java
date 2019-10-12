@@ -10,8 +10,8 @@ public class LoginDao {
 	SpringDbMgr springDbMgr = new SpringDbMgr();
 
 	public String authenticate(long codigo, String contraseña) {
-		if (esEstudiante(codigo, contraseña)) {
-			return "estudiante";
+		if (esRol1(codigo, contraseña)) {
+			return "ROL1";
 		} else if (esAdmin(codigo, contraseña)) {
 			return "admin";
 		} else if (esEvaluador(codigo, contraseña)) {
@@ -38,12 +38,12 @@ public class LoginDao {
 		return (sqlRowSet.next());
 	}
 
-	private boolean esEstudiante(long codigo, String contraseña) {
+	private boolean esRol1(long codigo, String contraseña) {
 		MapSqlParameterSource mapSqlParameterSource = new MapSqlParameterSource();
-		mapSqlParameterSource.addValue("codigo", codigo);
-		mapSqlParameterSource.addValue("contraseña", contraseña);
-		SqlRowSet sqlRowSet = springDbMgr.executeQuery("SELECT codigo " + "	FROM estudiante "
-				+ "	WHERE codigo = :codigo " + " AND contraseña = :contraseña", mapSqlParameterSource);
+		mapSqlParameterSource.addValue("CODIGO", codigo);
+		mapSqlParameterSource.addValue("CLAVE", contraseña);
+		SqlRowSet sqlRowSet = springDbMgr.executeQuery("SELECT codigo " + "	FROM rol1 "
+				+ "	WHERE CODIGO = :CODIGO " + " AND CLAVE = :CLAVE", mapSqlParameterSource);
 		return (sqlRowSet.next());
 	}
 }

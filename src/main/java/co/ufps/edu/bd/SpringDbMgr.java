@@ -46,9 +46,10 @@ public class SpringDbMgr {
 		p.setProperty("user", "root");
 		p.setProperty("password", "");
 		p.setProperty("driverClassName", "com.mysql.jdbc.Driver");
-		p.setProperty("url", "jdbc:mysql://localhost:8080/feria_proyectos");
+		String databaseName = "feria";
+		//p.setProperty("url", "jdbc:mysql://localhost:8080/feria_proyectos");
 
-		dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/feria", p);
+		dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/"+databaseName, p);
 		//jdbc:mysql://localhost:3306/dbname
 	}
 
