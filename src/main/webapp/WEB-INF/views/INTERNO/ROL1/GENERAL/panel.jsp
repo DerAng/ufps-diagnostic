@@ -1,13 +1,15 @@
      <%
-        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
-        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+
         String t =String.valueOf(request.getAttribute("token"));
         String nombre = (String)request.getSession().getAttribute("user");
     %>
-
-  <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
- <header class="main-header">
-        <a href="${contextPath}/ufps-feria/indexAdmin?t=<%=t%>" class="logo"><b>Feria De Proyectos</b></a>
+		<c:if test="${empty contextPath}">
+			<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+		</c:if>
+  		
+ 		
+ 		<header class="main-header">
+        <a href="${contextPath}/ufps-diagnostic/indexRol1" class="logo"><b>Diagnostico</b></a>
         <!-- Header Navbar: style can be found in header.less -->
         <nav class="navbar navbar-static-top" role="navigation">
           <!-- Sidebar toggle button-->

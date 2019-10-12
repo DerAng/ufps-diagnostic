@@ -97,4 +97,9 @@ public class LogController {
 		//template.delete("SESSION:" + codigo);
 	}
 
+	
+	@GetMapping("/indexRol1")
+	public String indexRol1() {
+		return "INTERNO/ROL1/indexRol1";
+	}
 }
