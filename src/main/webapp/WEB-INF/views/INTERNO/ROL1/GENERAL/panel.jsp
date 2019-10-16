@@ -60,7 +60,12 @@
               <a href="${contextPath}/ufps-diagnostic/listarModuloC">
                 <i class="fa fa-check-square-o"></i> <span> MODULO C</span>
               </a>
-                     
+              <a href="${contextPath}/ufps-diagnostic/listarModuloD">
+                <i class="fa fa-check-square-o"></i> <span> MODULO D</span>
+              </a>
+              <a href="${contextPath}/ufps-diagnostic/listarModuloE">
+                <i class="fa fa-check-square-o"></i> <span> MODULO E</span>
+              </a>
             </li>
 
           </ul>
