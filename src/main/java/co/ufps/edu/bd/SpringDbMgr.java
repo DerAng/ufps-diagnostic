@@ -49,7 +49,7 @@ public class SpringDbMgr {
 		String databaseName = "feria";
 		//p.setProperty("url", "jdbc:mysql://localhost:8080/feria_proyectos");
 
-		dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/"+databaseName, p);
+		dataSource = new DriverManagerDataSource("jdbc:mysql://localhost:3306/"+databaseName+"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC", p);
 		//jdbc:mysql://localhost:3306/dbname
 	}
 
