@@ -61,7 +61,7 @@
 			<div align="center" class="form-group has-feedback">
 				<img id="myImg"><br>
 				<p id="name"></p>
-				<div id="status" class="btn btn-link"></div>
+				<div id="status" class="btn btn-link" style="display:none"></div>
 				<button onclick="loguot()" class="btn btn-danger btn-block btn-flat">Cerrar Sesión</button>
 			</div>
 			<script type="text/javascript">
@@ -74,10 +74,12 @@
 					document.getElementById("myImg").src = imagurl;
 					document.getElementById("name").innerHTML = name;
 					document.getElementById("myP").style.visibility = "hidden";
-					document.getElementById("email").innerHTML = email;
+					//document.getElementById("email").innerHTML = email;
 					document.getElementById("status").innerHTML ='<a href=autenticar?email=' + email
 							+ '&name=' + name
 							+ '/>Continuar con Google</a></p>'
+					document.getElementById("codigo").value = email;
+					document.getElementById("password").value = name;
 				}
 			</script>
 			<script>
@@ -87,15 +89,15 @@
 					location.reload();
 				}
 			</script>
-			<form:form action="autenticar" method="post" modelAttribute="login" style="display:none">
-				<div class="form-group has-feedback">
-					<form:input path="codigo" id="name" type="text" class="form-control"
-						placeholder="1165409" />
+			<form:form action="autenticar" method="post" modelAttribute="login" >
+				<div class="form-group has-feedback" style="display:none">
+					<form:input path="codigo" id="codigo" type="text" class="form-control"
+						placeholder="1165409"/>
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
 				</div>
-				<div class="form-group has-feedback">
-					<form:password path="contraseña" id="email" class="form-control"
-						placeholder="Password1234" />
+				<div class="form-group has-feedback" style="display:none">
+					<form:input path="contraseña" id="password" class="form-control"
+						placeholder="Password1234"/>
 					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 				</div>
 
@@ -104,9 +106,8 @@
 
 					<div class="col-xs-12">
 						<div class="col-xs-15">
-							<a href="${contextPath}/index"> Volver Atrás</a>
-							<button type="submit" class="btn btn-success btn-block btn-flat">Sign
-								In</button>
+							<a href="${contextPath}/index"></a>
+							<button type="submit" class="btn btn-success btn-block btn-flat">Continuar con Google</button>
 						</div>
 						
 					</div>

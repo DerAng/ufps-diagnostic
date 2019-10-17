@@ -47,12 +47,10 @@ public class LogController {
 		return new Login();
 	}
 	
-	@GetMapping("/autenticar")
-	public String authenticateUser(@RequestParam(name="name")String name, @RequestParam(name="email") String email, Model model, HttpServletRequest request) {
 
-		Login login= new Login();
-		login.setCodigo(email);
-		login.setContraseña(name);
+	@PostMapping("/autenticar")
+	public String authenticateUser(@ModelAttribute("login") Login login, Model model, HttpServletRequest request) {
+
 		if(!StringUtils.isEmpty(login.getCodigo()) && !StringUtils.isEmpty(login.getContraseña())) {
 			String resultado = loginDao.authenticate(login.getCodigo(), login.getContraseña());
 			
@@ -82,39 +80,6 @@ public class LogController {
 			return "Login";
 		}
 	}
-
-	/*@PostMapping("/autenticar")
-	public String authenticateUser(@ModelAttribute("login") Login login, Model model, HttpServletRequest request) {
-
-		if(!StringUtils.isEmpty(login.getCodigo()) && !StringUtils.isEmpty(login.getContraseña())) {
-			String resultado = loginDao.authenticate(Long.parseLong(login.getCodigo()), login.getContraseña());
-			
-			if (!resultado.isEmpty()) {
-				String jwt = jwtUtil.generateToken(resultado, String.valueOf(login.getCodigo()));
-				request.setAttribute("token", jwt);
-				request.getSession().setAttribute("codigo", login.getCodigo());
-				HttpSession session = request.getSession();
-				//template.opsForValue().set("SESSION:" + login.getCodigo(), jwt);
-				session.setAttribute("codigo", login.getCodigo());
-				if (resultado.equals("ROL1")) {
-					session.setAttribute("user", "ROL1");
-					return "INTERNO/ROL1/indexRol1";
-				} else if (resultado.equals("evaluador")) {
-					session.setAttribute("user", "Evaluador");
-					return "Evaluador/indexEvaluador";
-				} else if (resultado.equals("admin")) {
-					session.setAttribute("user", "Administrador");
-					return "Administrador/indexAdmin";
-				}
-			}else {
-				model.addAttribute("wrong", "Usuario o contraseña incorrectos.");	
-			}
-			return "Login";
-		}else {
-			model.addAttribute("wrong", "El usuario y la contraseña no pueden ser nulos.");	
-			return "Login";
-		}
-	}*/
 
 	public void validarSesion(String token, HttpServletRequest request) {
 		int codigo = jwtUtil.parseToken(token);
