@@ -46,12 +46,13 @@ public class LogController {
 	public Login setUpUserForm() {
 		return new Login();
 	}
+	
 
 	@PostMapping("/autenticar")
 	public String authenticateUser(@ModelAttribute("login") Login login, Model model, HttpServletRequest request) {
 
 		if(!StringUtils.isEmpty(login.getCodigo()) && !StringUtils.isEmpty(login.getContraseña())) {
-			String resultado = loginDao.authenticate(Long.parseLong(login.getCodigo()), login.getContraseña());
+			String resultado = loginDao.authenticate(login.getCodigo(), login.getContraseña());
 			
 			if (!resultado.isEmpty()) {
 				String jwt = jwtUtil.generateToken(resultado, String.valueOf(login.getCodigo()));
@@ -67,8 +68,8 @@ public class LogController {
 					session.setAttribute("user", "Evaluador");
 					return "Evaluador/indexEvaluador";
 				} else if (resultado.equals("admin")) {
-					session.setAttribute("user", "Administrador");
-					return "Administrador/indexAdmin";
+					session.setAttribute("user", login.getContraseña());
+					return "INTERNO/ROL1/indexRol1";
 				}
 			}else {
 				model.addAttribute("wrong", "Usuario o contraseña incorrectos.");	
