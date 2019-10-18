@@ -28,6 +28,7 @@ public class LogController {
 	@GetMapping("/logout") // Base
 	@ResponseBody
 	public ModelAndView logout(@RequestParam("t") String token, HttpServletRequest request) {
+		System.out.println("HOLA NUEVA LINEA");
 		getLogOut(token, request);
 		return new ModelAndView("index"); // Nombre del archivo jsp
 	}
