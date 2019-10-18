@@ -1,11 +1,12 @@
+
      <%
 
         String t =String.valueOf(request.getAttribute("token"));
         String nombre = (String)request.getSession().getAttribute("user");
     %>
-		
+		<c:if test="${empty contextPath}">
 			<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
-	
+		</c:if>
   		
  		
  		<header class="main-header">
@@ -60,11 +61,12 @@
               <a href="${contextPath}/ufps-diagnostic/listarModuloC">
                 <i class="fa fa-check-square-o"></i> <span> MODULO C</span>
               </a>
-              
-               <a href="${contextPath}/ufps-diagnostic/listarModuloE">
+              <a href="${contextPath}/ufps-diagnostic/listarModuloD">
+                <i class="fa fa-check-square-o"></i> <span> MODULO D</span>
+              </a>
+              <a href="${contextPath}/ufps-diagnostic/listarModuloE">
                 <i class="fa fa-check-square-o"></i> <span> MODULO E</span>
               </a>
-                     
             </li>
 
           </ul>
