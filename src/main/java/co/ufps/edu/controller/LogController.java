@@ -22,9 +22,7 @@ public class LogController {
 	private JwtUtil jwtUtil = new JwtUtil();
 
 	private LoginDao loginDao = new LoginDao();
-
-
-
+	
 	@GetMapping("/logout") // Base
 	@ResponseBody
 	public ModelAndView logout(@RequestParam("t") String token, HttpServletRequest request) {
