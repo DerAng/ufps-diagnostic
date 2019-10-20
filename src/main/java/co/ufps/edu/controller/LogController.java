@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import co.ufps.edu.config.SessionManager;
+import co.ufps.edu.constantes.Constantes;
 import co.ufps.edu.dao.LoginDao;
-import co.ufps.edu.model.Login;
+import co.ufps.edu.dto.Login;
 import co.ufps.edu.util.JwtUtil;
 
 @Controller
@@ -23,14 +25,14 @@ public class LogController {
 
 	private LoginDao loginDao = new LoginDao();
 
+	private SessionManager sessionManager = new SessionManager();
 
-
-	@GetMapping("/logout") // Base
+	/*@GetMapping("/logout") // Base
 	@ResponseBody
 	public ModelAndView logout(@RequestParam("t") String token, HttpServletRequest request) {
 		getLogOut(token, request);
 		return new ModelAndView("index"); // Nombre del archivo jsp
-	}
+	}*/
 
 	@GetMapping("/login") // Base
 	public String index() {
@@ -51,56 +53,90 @@ public class LogController {
 	@PostMapping("/autenticar")
 	public String authenticateUser(@ModelAttribute("login") Login login, Model model, HttpServletRequest request) {
 
-		if(!StringUtils.isEmpty(login.getCodigo()) && !StringUtils.isEmpty(login.getContraseña())) {
-			String resultado = loginDao.authenticate(login.getCodigo(), login.getContraseña());
-			
-			if (!resultado.isEmpty()) {
-				String jwt = jwtUtil.generateToken(resultado, String.valueOf(login.getCodigo()));
-				request.setAttribute("token", jwt);
-				request.getSession().setAttribute("codigo", login.getCodigo());
-				HttpSession session = request.getSession();
-				//template.opsForValue().set("SESSION:" + login.getCodigo(), jwt);
-				session.setAttribute("codigo", login.getCodigo());
-				if (resultado.equals("ROL1")) {
-					session.setAttribute("user", "ROL1");
-					return "INTERNO/ROL1/indexRol1";
-				} else if (resultado.equals("evaluador")) {
-					session.setAttribute("user", "Evaluador");
-					return "Evaluador/indexEvaluador";
-				} else if (resultado.equals("admin")) {
-					session.setAttribute("user", login.getContraseña());
-					return "INTERNO/ROL1/indexRol1";
-				}
-			}else {
-				model.addAttribute("wrong", "Usuario o contraseña incorrectos.");	
+		/*
+	     * Consulto si los datos no vienen nulos
+	     */
+	    if (!StringUtils.isEmpty(login.getCorreo())) {
+	      // Consulto en base de datos si se encuentra ese correo
+	      String resultado = loginDao.authenticate(login.getCorreo());
+
+	      // Si el resultado no es vacio es por que si existe ese correo y esa contraseña
+	      if (!resultado.isEmpty()) {
+
+	        // Creo un Json Web Token para validar si la sesión esta activa
+	        String jwt = jwtUtil.generateToken(resultado, login.getCorreo());
+
+	        // Guardo el JWT como atributo de sesión
+	        request.getSession().setAttribute("token", jwt);
+
+	        // Guarda la sesion en el manejador de sesiones
+	        sessionManager.guardarSession("SESSION:" + login.getCorreo(), jwt);
+
+	        // Redirijo al index debido a que el usuario ya fue autenticado con exito
+	        
+	        if (resultado.equals(Constantes.ROL_ESTUDIANTE)) {
+	        	request.getSession().setAttribute("user", Constantes.ROL_ESTUDIANTE);
+				return indexEstudiante();
+			} else if (resultado.equals(Constantes.ROL_PROFESOR)) {
+				request.getSession().setAttribute("user", Constantes.ROL_PROFESOR);
+				return indexProfesor();
+			} else if (resultado.equals(Constantes.ROL_DIRECTOR)) {
+				request.getSession().setAttribute("user", Constantes.ROL_DIRECTOR);
+				return indexDirector();
+			} else if (resultado.equals(Constantes.ROL_VICERRECTOR)) {
+				request.getSession().setAttribute("user", Constantes.ROL_VICERRECTOR);
+				return indexVicerRector();
 			}
-			return "Login";
-		}else {
-			model.addAttribute("wrong", "El usuario y la contraseña no pueden ser nulos.");	
-			return "Login";
-		}
-	}
+	        
+	      } else {
 
-	public void validarSesion(String token, HttpServletRequest request) {
-		int codigo = jwtUtil.parseToken(token);
-		/*if (token == null || token.isEmpty() || codigo == 0
-				|| template.opsForValue().get("SESSION:" + codigo) == null) {
-			throw new RuntimeException("FALTA TOKEN");
-		}*/
-		request.setAttribute("token", token);
-		request.getSession().setAttribute("codigo", codigo);
-
+	        /**
+	         * Guardo en una variable el mensaje de error indicando que el usuario o la contraseña
+	         * fueron incorrectos debido a que no se encuentran en la base de datos y asi pueda ser
+	         * entendida por los archivos .JSP
+	         */
+	        model.addAttribute("wrong", "Errores de autenticación con google. Contacte a su administrador del sistema.");
+	      }
+	      // Redirecciono al login debido a que la autenticación fue incorrecta
+	      return "EXTERNO/Login";
+	    } else {
+	      /**
+	       * Guardo en una variable el mensaje de error indicando que el usuario o la contraseña son
+	       * nulos siendo estos datos son obligatorios, y asi pueda ser entendida por los archivos .JSP
+	       */
+	      model.addAttribute("wrong", "Google no esta enviando el correo.");
+	      // Redirecciono al login debido a que la autenticación fue incorrecta
+	      return "EXTERNO/Login";
+	    }
+		
 	}
+	@GetMapping("/logout")
+	  private String getLogOut(String token, HttpServletRequest request) {
+	    request.getSession().invalidate();
+	    String correo = jwtUtil.parseToken(token);
+	    sessionManager.eliminarSesion("SESSION:" + correo);
+	    return "EXTERNO/Login"; // Nombre del archivo jsp
+	  }
 
-	private void getLogOut(String token, HttpServletRequest request) {
-		request.getSession().invalidate();
-		int codigo = jwtUtil.parseToken(token);
-		//template.delete("SESSION:" + codigo);
-	}
 
 	
-	@GetMapping("/indexRol1")
-	public String indexRol1() {
-		return "INTERNO/ROL1/indexRol1";
+	@GetMapping("/indexEstudiante")
+	public String indexEstudiante() {
+		return "INTERNO/ESTUDIANTE/indexEstudiante";
+	}
+	
+	@GetMapping("/indexProfesor")
+	public String indexProfesor() {
+		return "INTERNO/PROFESOR/indexProfesor";
+	}
+	
+	@GetMapping("/indexDirector")
+	public String indexDirector() {
+		return "INTERNO/DIRECTOR/indexDirector";
+	}
+	
+	@GetMapping("/indexVicerRector")
+	public String indexVicerRector() {
+		return "INTERNO/VICERRECTOR/indexVicerRector";
 	}
 }

@@ -10,7 +10,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 public class JwtUtil {
 
-	// @Value("${jwt.secret}")
 	private String secret = "secret";
 
 	/**
@@ -25,15 +24,15 @@ public class JwtUtil {
 	 *         invalid.
 	 */
 
-	public int parseToken(String token) {
+	public String parseToken(String token) {
 		try {
 			Claims body = Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
-			int codigo = Integer.parseInt(body.get("codigo").toString());
-			return codigo;
+			String  correo = body.get("correo").toString();
+			return correo;
 		} catch (JwtException | ClassCastException e) {
-			return 0;
+			return "";
 		} catch(Exception ex) {
-			return 0;
+			return "";
 		}
 		
 	}
@@ -47,9 +46,9 @@ public class JwtUtil {
 	 *            the user for which the token will be generated
 	 * @return the JWT token
 	 */
-	public String generateToken(String rol, String codigo) {
+	public String generateToken(String rol, String correo) {
 		Claims claims = Jwts.claims().setSubject("users/" + rol);
-		claims.put("codigo", codigo);
+		claims.put("correo", correo);
 		claims.put("rol", rol);
 
 		return Jwts.builder()

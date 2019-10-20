@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import co.ufps.edu.dao.ModuloDDao;
-import co.ufps.edu.model.ModuloA;
-import co.ufps.edu.model.ModuloD;
+import co.ufps.edu.dto.ModuloA;
+import co.ufps.edu.dto.ModuloD;
 
 @Controller
 public class ModuloDController {

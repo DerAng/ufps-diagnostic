@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.support.StandardServletMultipartResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
@@ -21,7 +22,7 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public MultipartResolver multipartResolver() {
 		return new StandardServletMultipartResolver();
 	}
-	
+
 	@Bean
 	public InternalResourceViewResolver resolver() {
 		// 2. Registra los jsp
@@ -37,5 +38,17 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
 		// 3. Registrar los Recursos (Css,JS,font,entre otros)
 		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/");
+	}
+
+	@Override
+	public void addInterceptors(InterceptorRegistry registry) {
+		// Mapea la clase para la seguridad
+		registry.addInterceptor(getSessionManager()).addPathPatterns("/**").excludePathPatterns("/resources/**",
+				"/admin", "/autenticar", "/recordar", "/recordarContraseña", "/");
+	}
+
+	@Bean
+	public SessionManager getSessionManager() {
+		return new SessionManager();
 	}
 }

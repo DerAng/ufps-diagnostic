@@ -21,7 +21,7 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
           <h1>
-            Bienvenido ROL 1
+            Bienvenido Vicerrector
             
           </h1>
           

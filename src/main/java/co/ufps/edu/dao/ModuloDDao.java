@@ -7,8 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
 import co.ufps.edu.bd.SpringDbMgr;
-import co.ufps.edu.model.ModuloA;
-import co.ufps.edu.model.ModuloD;
+import co.ufps.edu.dto.ModuloA;
+import co.ufps.edu.dto.ModuloD;
 
 public class ModuloDDao {
 
