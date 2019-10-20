@@ -78,8 +78,8 @@
 					document.getElementById("status").innerHTML ='<a href=autenticar?email=' + email
 							+ '&name=' + name
 							+ '/>Continuar con Google</a></p>'
-					document.getElementById("codigo").value = email;
-					document.getElementById("password").value = name;
+					document.getElementById("correo").value = email;
+					
 				}
 			</script>
 			<script>
@@ -91,15 +91,10 @@
 			</script>
 			<form:form action="autenticar" method="post" modelAttribute="login" >
 				<div class="form-group has-feedback" style="display:none">
-					<form:input path="codigo" id="codigo" type="text" class="form-control"
+					<form:input path="correo" id="correo" type="text" class="form-control"
 						placeholder="1165409"/>
 					<span class="glyphicon glyphicon-user form-control-feedback"></span>
-				</div>
-				<div class="form-group has-feedback" style="display:none">
-					<form:input path="contraseña" id="password" class="form-control"
-						placeholder="Password1234"/>
-					<span class="glyphicon glyphicon-lock form-control-feedback"></span>
-				</div>
+				</div>			
 
 				<div class="row">
 

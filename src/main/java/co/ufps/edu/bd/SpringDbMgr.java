@@ -13,7 +13,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
-import co.ufps.edu.model.ResultDB;
+import co.ufps.edu.dto.ResultDB;
 
 /**
  * Class with basic operations to interact with Database System.
